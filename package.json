@@ -1,0 +1,11 @@
+{
+  "name": "node-auth",
+  "version": "1.0.0",
+  "description": "trying various ways of authentication in nodejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Micheal Naita <hello@michealnaita.com>",
+  "license": "ISC"
+}
