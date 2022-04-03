@@ -1,0 +1,21 @@
+datasource db {
+    provider = "sqlite"
+    url      = "file:./app.db"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id         String   @id @unique
+    email      String
+    hash       String
+    session_id Session?
+}
+
+model Session {
+    id      String @id @unique
+    user    User   @relation(fields: [user_id], references: [id])
+    user_id String @unique
+}
