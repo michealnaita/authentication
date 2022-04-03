@@ -5,8 +5,11 @@ import express, { Express } from 'express';
 import sessionRoute from './sessionAuth';
 import { engine } from 'express-handlebars';
 import path from 'path';
+import cookieParser from 'cookie-parser';
 
 const app: Express = express();
+app.use(cookieParser());
+app.use(express.json());
 
 // view engine
 app.engine(
