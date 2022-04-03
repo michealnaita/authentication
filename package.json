@@ -12,7 +12,8 @@
   "author": "Micheal Naita <hello@michealnaita.com>",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "express-handlebars": "^6.0.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
