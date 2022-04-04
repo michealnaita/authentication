@@ -18,15 +18,35 @@ router.get('/login', (req: Request, res: Response) => {
   res.render('session');
 });
 
-// user
+// login api endpoint
+// TODO: handle remember me
 router.post('/login', async (req: Request, res: Response) => {
-  const payload: LoginPayload = req.body;
-  const user: string | boolean = await utils.validateUser(payload);
-  if (!user) {
-    res.json({ error: true, error_message: 'wrong credentials' });
-    return;
+  try {
+    const payload: LoginPayload = req.body;
+    const user: string | boolean = await utils.validateUser(payload);
+    if (!user) {
+      res.statusCode = 400;
+      res.json({ error: true, error_message: 'wrong credentials' });
+      return;
+    }
+    const usersSession: string | false = await utils.saveSession(user);
+    if (!usersSession) {
+      res.statusCode = 500;
+      res.json({ error: true, error_message: 'something went wrong' });
+      return;
+    }
+    res.statusCode = 200;
+    res.cookie('sessionId', usersSession, {
+      path: '/session',
+    });
+    res.json({ sucess: true });
+  } catch (e) {
+    console.log('error', e);
   }
-  const usersSession: string | false = await utils.saveSession(user);
-  // TODO: set session_id in cookie
+});
+
+router.use((req, res, next) => {
+  res.statusCode = 403;
+  res.send('method not allowed');
 });
 export default router;

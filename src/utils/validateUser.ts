@@ -13,6 +13,8 @@ export default async function validateUser(payload: {
         email: payload.email,
       },
     });
+    //TODO: unhash password and compare
+    //TODO: throw InvlidCredetials error on error
     if (userData.hash == payload.password) {
       return userData.id;
     } else {
