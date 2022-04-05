@@ -6,10 +6,12 @@ import sessionRoute from './sessionAuth';
 import { engine } from 'express-handlebars';
 import path from 'path';
 import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
 
 const app: Express = express();
 app.use(cookieParser());
 app.use(express.json());
+app.use(morgan('dev'));
 
 // view engine
 app.engine(
@@ -33,7 +35,7 @@ app.use('/session', sessionRoute);
 // error handling
 app.use((err, req, res, next) => {
   console.log(err.message);
-  res.status(500);
+  res.status(err.status || 500);
   res.send('something went wrong');
 });
 
