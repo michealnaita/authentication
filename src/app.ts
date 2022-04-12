@@ -3,11 +3,14 @@
  */
 import express, { Express } from 'express';
 import sessionRoute from './sessionAuth';
+import jwtRoute from './jwtAuth';
 import { engine } from 'express-handlebars';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const app: Express = express();
 app.use(cookieParser());
 app.use(express.json());
@@ -31,6 +34,7 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 app.use('/session', sessionRoute);
+app.use('/jwt', jwtRoute);
 
 // error handling
 app.use((err, req, res, next) => {
