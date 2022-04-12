@@ -8,10 +8,11 @@ generator client {
 }
 
 model User {
-    id         String   @id @unique
-    email      String
-    hash       String
-    session_id Session?
+    id           String   @id @unique
+    email        String
+    hash         String
+    session_id   Session?
+    refreshToken String?
 }
 
 model Session {
