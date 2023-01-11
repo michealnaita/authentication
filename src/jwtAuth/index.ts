@@ -3,6 +3,7 @@ import validateUser from '../utils/validateUser';
 import debug from 'debug';
 import TokenGenerator from '../utils/token';
 import { BadRequest, InternalServerError } from 'http-errors';
+import { NotAuthorised } from '../utils/errors';
 
 declare global {
   namespace Express {
@@ -23,12 +24,12 @@ const logger = debug('jwt');
 
 // Serve protected page
 router.get('/', authMiddlware, async (req: Request, res: Response) => {
-  //
+  res.render('protected');
 });
 
 // serve login page
 router.get('/login', (_, res: Response) => {
-  res.send('Hello Jwt');
+  res.render('jwt');
 });
 
 // Login api endpoint
@@ -67,7 +68,14 @@ router.post(
 
 // Log out route
 router.get('/logout', authMiddlware, async (req: Request, res: Response) => {
-  //
+  try {
+    const user: string | undefined = req.user;
+    if (!user) throw new NotAuthorised('Not');
+    res.clearCookie('accesstoken');
+    res.json({ success: true });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 router.use((req, res, next) => {
@@ -76,9 +84,21 @@ router.use((req, res, next) => {
 });
 
 async function authMiddlware(req: Request, res: Response, next: any) {
-  //
+  const accesstoken: string = req.cookies.accesstoken;
+  try {
+    if (!accesstoken) throw new NotAuthorised('Missing Auth token');
+    const validToken = TokenGenerator.verify(accesstoken);
+    if (!validToken) throw new NotAuthorised('Invalid session Id');
+    req.user = validToken.user;
+  } catch (err) {
+    if (err instanceof NotAuthorised) {
+      res.redirect('/jwt/login');
+      return;
+    }
+  }
   next();
 }
+
 function errorHandler(err, res: Response) {
   logger(err.message);
   if (err instanceof InternalServerError) {
