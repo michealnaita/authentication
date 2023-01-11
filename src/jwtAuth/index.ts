@@ -71,7 +71,7 @@ router.get('/logout', authMiddlware, async (req: Request, res: Response) => {
   try {
     const user: string | undefined = req.user;
     if (!user) throw new NotAuthorised('Not');
-    res.clearCookie('accesstoken');
+    res.clearCookie('accesstoken', { path: '/jwt' });
     res.json({ success: true });
   } catch (err) {
     console.log(err);
