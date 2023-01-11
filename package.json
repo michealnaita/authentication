@@ -6,9 +6,11 @@
     "build": "rimraf dist && tsc",
     "clean": "rimraf dist",
     "serve": "cross-env NODE_ENV=development concurrently \" tsc --watch\" \" nodemon -q dist/app.js\" ",
-    "start": "cross NODE_ENV=production node dist/app.js",
-    "test": "cross NODE_ENV=testing echo \"Error: no test specified\" && exit 1",
-    "db-migrate:dev": "prisma migrate dev"
+    "start": "cross-env NODE_ENV=production node dist/app.js",
+    "test": "cross-env NODE_ENV=testing",
+    "db-migrate:dev": "prisma migrate dev",
+    "db-gen": "prisma generate",
+    "seed": "prisma db seed"
   },
   "author": "Micheal Naita <hello@michealnaita.com>",
   "license": "ISC",
@@ -36,6 +38,7 @@
     "typescript-eslint-parser": "^22.0.0"
   },
   "prisma": {
-    "schema": "db/schema.prisma"
+    "schema": "db/schema.prisma",
+    "seed": "node db/seed.js"
   }
 }
