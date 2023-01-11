@@ -2,17 +2,20 @@
 const form = document.getElementById('login-form');
 const logoutBtn = document.getElementById('logout-btn');
 
+const route = window.location.pathname.split('/')[1];
+
 logoutBtn &&
   logoutBtn.addEventListener('click', async () => {
     try {
-      const res = await fetch('/session/logout');
+      const res = await fetch('/' + route + '/logout');
       const data = await res.json();
       if (data.success) {
-        location.href = '/session/login';
+        location.href = '/';
       } else {
-        console.log(data);
+        window.alert(data.error_message);
       }
     } catch (e) {
+      window.alert(e.error_message);
       console.log(e);
     }
   });
@@ -21,20 +24,19 @@ form &&
     e.preventDefault();
     const formData = new FormData(e.target);
     const payload = Object.fromEntries(formData);
-    console.log(payload);
     try {
-      const res = await fetch('/session/login', {
+      const res = await fetch('/' + route + '/login', {
         headers: { 'Content-type': 'application/json' },
         method: 'POST',
         body: JSON.stringify(payload),
       });
-      const resData = await res.json();
-      if (resData.success) {
-        location.href = '/session';
+      const data = await res.json();
+      if (data.success) {
+        location.href = '/' + route;
       } else {
-        console.log(resData);
+        throw new Error(data.error_message);
       }
     } catch (e) {
-      console.log(e.message);
+      window.alert('Wrong Credentials');
     }
   });
