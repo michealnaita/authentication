@@ -8,7 +8,7 @@ const logger = debug('token_gen');
 
 const db = new PrismaClient();
 
-const KEY = process.env.SECRET;
+const { SECRET } = process.env;
 export default class TokenGenerator {
   userId: string;
   token: string;
@@ -20,7 +20,7 @@ export default class TokenGenerator {
       logger('creating access_token: start');
       jwt.sign(
         { user: this.userId },
-        KEY,
+        SECRET,
         { expiresIn: '1hr' },
         async (err: any, token: string) => {
           if (!err && token) {
@@ -50,8 +50,16 @@ export default class TokenGenerator {
       );
     });
   }
-  static verify(token) {
-    //
+  static verify(token: string): false | { user: string } {
+    try {
+      const decoded: { user: string } = jwt.verify(token, SECRET);
+      if (decoded) {
+        return decoded;
+      }
+      return false;
+    } catch (err) {
+      return false;
+    }
   }
   refresh(token: string) {
     //

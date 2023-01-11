@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import { PrismaClient } from '@prisma/client';
 const db = new PrismaClient();
 export default async function validateUser(payload: {
@@ -13,12 +14,13 @@ export default async function validateUser(payload: {
         email: payload.email,
       },
     });
-    //TODO: unhash password and compare
-    //TODO: throw InvlidCredetials error on error
-    if (userData.hash == payload.password) {
+
+    const result = await bcrypt.compare(payload.password, userData.hash);
+
+    if (userData && result) {
       return userData.id;
     } else {
-      return false;
+      throw new Error('Invalid user credentials');
     }
   } catch (e) {
     console.log('verrifying user error: ', e);
