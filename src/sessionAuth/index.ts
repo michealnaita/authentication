@@ -25,7 +25,7 @@ const logger = debug('session');
 
 // Serve protected page
 router.get('/', authMiddlware, async (req: Request, res: Response) => {
-  res.render('protected');
+  res.render('session-protected');
 });
 
 // serve login page

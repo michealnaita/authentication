@@ -24,7 +24,7 @@ const logger = debug('jwt');
 
 // Serve protected page
 router.get('/', authMiddlware, async (req: Request, res: Response) => {
-  res.render('protected');
+  res.render('jwt-protected');
 });
 
 // serve login page
